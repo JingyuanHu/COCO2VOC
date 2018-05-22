@@ -5,6 +5,18 @@ import xml.dom.minidom
 import os
 import cv2
 import json
+import argparse
+import sys
+
+parser = argparse.ArgumentParser(description='The year of COCO :2014 or 2017')
+parser.add_argument('--year', default=None,type=str, help='2014 or 2017')
+args = parser.parse_args()
+
+year = args.year
+COCO_Year = ['2014', '2017']
+if year not in COCO_Year:
+    raise Exception("You need to choose the year of COCO:2014 or 2017")
+
 
 _AUTHOR= 'Hujingyuan'
 _SEGMENTED= '0'
@@ -58,13 +70,13 @@ def writeXMLFile(doc,filename):
     fout.close()
 
 if __name__ == "__main__":
-    img_path = "train2017/"
+    img_path = "train"+year+"/"
     fileList = os.listdir(img_path)
     if fileList == 0:
         print("Do not find images in your img_path")
         os._exit(-1)
 
-    with open("COCO_train2017.json", "r") as f:
+    with open("annotations/COCO_train"+year+".json", "r") as f:
         ann_data = json.load(f)
 
     current_dirpath = os.path.dirname(os.path.abspath('__file__'))
@@ -90,7 +102,7 @@ if __name__ == "__main__":
         root_node = doc.documentElement
         #print(root_node)
         #input()
-        createChildNode(doc, 'folder', 'COCO2017', root_node)
+        createChildNode(doc, 'folder', 'COCO'+year, root_node)
 
         createChildNode(doc, 'filename', saveName+'.jpg',root_node)
 
@@ -98,7 +110,7 @@ if __name__ == "__main__":
 
         createChildNode(doc, 'database', 'LOGODection', source_node)
 
-        createChildNode(doc, 'annotation', 'COCO2017', source_node)
+        createChildNode(doc, 'annotation', 'COCO'+year, source_node)
 
         createChildNode(doc, 'image','flickr', source_node)
 
@@ -128,7 +140,7 @@ if __name__ == "__main__":
 
         count = 0
         for ann in ann_data:
-            if(saveName==("COCO_train2017_" + ann["filename"].zfill(12))):
+            if((year=='2014' and saveName==("COCO_train"+year+"_" + ann["filename"].zfill(12))) or (year == '2017' and saveName==(ann["filename"].zfill(12)))):
                 count = 1
                 object_node = createObjectNode(doc, ann)
                 root_node.appendChild(object_node)

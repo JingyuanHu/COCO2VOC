@@ -2,11 +2,10 @@
 An implementation of converting data of COCO format to VOC format
 
 ## Usage
-### Filter the classes you need
-python filter.py
+1. You need to download COCO data and unzip it
 
-### Remove picture you do not need
-python remove.py
+2. Move this code into the folder where you unzip COCO
 
-### Write VOC xml format
-python write.py
+3. sh run.sh and you can find a new folder Annotations where *.xml are stored there
+
+## You can change the year of COCO you want to convert in run.sh ,default is 2014
